@@ -31,10 +31,13 @@ button{
 #photo{
   display:none;
   opacity:0;
-  transition: opacity 1s ease;
+  transition: opacity 1s ease, transform 1s ease;
   width:320px;
   border-radius:20px;
-  margin-top:20px;
+  margin-top:50px;
+  margin-left:auto;
+  margin-right:auto;
+  display:block;
   box-shadow:0 10px 20px rgba(0,0,0,0.2);
 }
 .floating{
@@ -43,15 +46,16 @@ button{
   animation-name: rise;
   animation-timing-function: linear;
   animation-iteration-count: 1;
+  cursor:pointer;
 }
 @keyframes rise{
   0%{transform:translateY(100vh);}
   100%{transform:translateY(-10vh);}
 }
-#desc, #choices, #angry, #final, #lastMsg, #okBtn{
+#desc, #choices, #angry, #lastStep, #final, #okBtn{
   display:none;
 }
-#final, #lastMsg{
+#final{
   font-size:22px;
   padding:25px;
   max-width:700px;
@@ -68,13 +72,16 @@ button{
 <div id="desc">
   <p>A small interactive Women's Day surprise website made with love for uhh babyygirl!!</p>
 </div>
+
 <div id="choices">
   <button onclick="openGift()">Open 💝</button>
   <button onclick="ignoreGift()">Ignore 🙄</button>
 </div>
+
 <p id="angry"></p>
 
 <div id="bigHeart" onclick="startSurprise()">❤️</div>
+
 <img id="photo">
 
 <div id="lastStep">
@@ -83,6 +90,7 @@ button{
 
 <div id="final">
 <p>Once again Happy Women's Day… gift ni de paya to ky i have made this for u with love… hope u liked it 💖❤️💞</p>
+<button id="okBtn" onclick="closeFinal()">Ok 💖</button>
 </div>
 
 <audio id="music">
@@ -145,35 +153,45 @@ function spawnHeart(){
   setTimeout(()=>{heart.remove();}, duration*1000);
 }
 
-// show photos with fade-in/out, 5s each
+// show photos with fade-in/out + zoom effect, 5s each
 function showPhoto(heart){
   heart.remove();
   if(current >= photos.length){
     document.getElementById("photo").style.display="none";
-    document.getElementById("lastStep").style.display="block"; // last message button
-    clearInterval(heartsInterval); // stop creating new floating hearts
+    clearInterval(heartsInterval); // stop floating hearts
+    document.getElementById("lastStep").style.display="block"; // last thing button
     return;
   }
   let photoEl = document.getElementById("photo");
   photoEl.src = photos[current];
   photoEl.style.opacity = 0;
+  photoEl.style.transform = "scale(0.5)";
   photoEl.style.display = "block";
   current++;
-  setTimeout(()=>{photoEl.style.opacity = 1;},50);
+  setTimeout(()=>{
+    photoEl.style.opacity = 1;
+    photoEl.style.transform = "scale(1)";
+  },50);
   setTimeout(()=>{
     photoEl.style.opacity = 0;
+    photoEl.style.transform = "scale(0.5)";
     setTimeout(()=>{photoEl.style.display="none";},1000);
   },5000);
 }
 
-// Step 5: show final message
+// Step 5: show final message after last thing button
 function showFinalMessage(){
   document.getElementById("lastStep").style.display="none";
   document.getElementById("final").style.display="block";
-  // stop music when message appears
+  document.getElementById("okBtn").style.display="inline-block";
   let music = document.getElementById("music");
   music.pause();
   music.currentTime = 0;
+}
+
+// close final message
+function closeFinal(){
+  document.getElementById("final").style.display="none";
 }
 </script>
 
